@@ -5,6 +5,7 @@ export const usePrCheckUtils = () => {
   const UT_LABEL = 'ut';
   const devMessageRegex = /^\[DEV\d{6}\].*/;
   const ngMessageRegex = /^\[SP\d{3}_NG\d{4}\].*/;
+  const mergeMessageRegex = /^Merge .*/;
 
   /**
    * 
@@ -49,7 +50,11 @@ export const usePrCheckUtils = () => {
   const checkCommitMessages = commitData => {
     for (var j = 0; j < commitData.length; j++) {
       const commitMessage = commitData[j].commit.message;
-      if (!commitMessage.match(devMessageRegex) && !commitMessage.match(ngMessageRegex)) {
+
+      const isDevCommit = commitMessage.match(devMessageRegex);
+      const isNgCommit = commitMessage.match(ngMessageRegex);
+      const isMergeCommit = commitMessage.match(mergeMessageRegex);
+      if (!isDevCommit && !isNgCommit && !isMergeCommit) {
         throw `Commit message format is invalid. commitMessage: ${commitMessage}`;
       }
     }
